@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}Todo List{% endblock %}
+    </title>
+</head>
+
+<body>
+    LIST OF tasks
+
+    <ul>
+        <ol>
+            {% for task in tasks %}
+            <li>{{ task.title }} - ({{ task.discription }}) - {{ task.completed }}</li>
+            {% empty %}
+            <li>No tasks found</li>
+            {% endfor %}
+        </ol>
+    </ul>
+
+</body>
+
+</html>
