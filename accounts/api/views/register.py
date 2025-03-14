@@ -11,7 +11,6 @@ from accounts.serializers import UserSerializer
 def register_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        # TODO write send email function with celery(background task)
         serializer.save()
         response_dict = {
             "message": "User registered successfully",
