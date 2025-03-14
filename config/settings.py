@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +30,8 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     "rest_framework.authtoken",
+    "django_celery_beat",
+    "django_celery_results",
     # Local apps
     "todo",
     "accounts",
@@ -43,6 +47,24 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": "72785694456-bgiauqv4bucn2h6j164tkn59uktkllkn.apps.googleusercontent.com",
+            "secret": "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",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
 
 ROOT_URLCONF = "config.urls"
 
@@ -116,3 +138,42 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "xackercoder@gmail.com"
+EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws"
+EMAIL_SUBJECT = "Email verification"
+EMAIL_SUBJECT1 = "Add"
+
+AUTHENTICATION_BACKENDS = (
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+SOCIALACCOUNT_LOGIN_ON_GET = True
+# add redirect url after login google
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+CELERY_RESULT_BACKEND = "redis://localhost:6379/1"  # or your result backend
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tashkent"
+
+
+# CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+# broker_connection_retry_on_startup
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
