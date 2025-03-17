@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from celery.schedules import crontab
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,22 +47,6 @@ MIDDLEWARE = [
 ]
 
 SITE_ID = 1
-
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "APP": {
-            "client_id": "72785694456-bgiauqv4bucn2h6j164tkn59uktkllkn.apps.googleusercontent.com",
-            "secret": "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",
-        },
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        },
-    }
-}
 
 ROOT_URLCONF = "config.urls"
 
@@ -146,20 +128,9 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "xackercoder@gmail.com"
-EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws"
+EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws"  # TODO move to env
 EMAIL_SUBJECT = "Email verification"
-EMAIL_SUBJECT1 = "Add"
 
-AUTHENTICATION_BACKENDS = (
-    "allauth.account.auth_backends.AuthenticationBackend",
-    "django.contrib.auth.backends.ModelBackend",
-)
-
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-SOCIALACCOUNT_LOGIN_ON_GET = True
 # add redirect url after login google
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"

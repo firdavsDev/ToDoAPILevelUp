@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 
-from accounts.models import CustomUser
 from accounts.email_verifycation import verify_email_code
+from accounts.models import CustomUser
+
+# TODO remove any redirects intead return response and use api
 
 
 def verify_email(request, email_code):

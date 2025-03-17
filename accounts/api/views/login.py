@@ -14,6 +14,7 @@ def login_user(request):
     if serializer.is_valid():
         user = serializer.validated_data["user"]
         response_serializer = UserSerializer(instance=user)
+        # Create a token for the user
         token, created = Token.objects.get_or_create(user=user)
         response_dict = {
             "message": "User logged in successfully",

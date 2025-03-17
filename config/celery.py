@@ -12,21 +12,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 # FIXME celery -A config worker --loglevel=info (run this command in terminal)
 app = Celery("config")  # app = Celery('config', broker='redis://localhost:6379/0')
 
-# U can also set in settings.py
-# app.conf.update(
-#     CELERY_TASK_SERIALIZER='json',
-#     CELERY_RESULT_SERIALIZER='json',
-#     CELERY_ACCEPT_CONTENT=['json'],
-#     CELERY_TIMEZONE='US/Central',
-#     CELERY_ENABLE_UTC=True,
-#     CELERYBEAT_SCHEDULE = {
-#     'test': {
-#         'task': 'tasks.test',
-#         'schedule': crontab(),
-#         },
-#     }
-# )
-
 
 # Configure Celery using settings from Django settings.py.
 app.config_from_object("django.conf:settings", namespace="CELERY")
