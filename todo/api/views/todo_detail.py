@@ -15,6 +15,7 @@ from ..serializers.todo import TaskSerializer, TaskSerializerModel
 def get_todo_detail(request, task_id):
     try:
         task = Task.objects.get(id=task_id)
+        # if task.user != user:
         todo_serializer_obj = TaskSerializerModel(instance=task)
         return Response(todo_serializer_obj.data)
     except Task.DoesNotExist:
