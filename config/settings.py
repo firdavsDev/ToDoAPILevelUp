@@ -1,5 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
+from decouple import config 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-izrs0t9&s^v81+8l0e$(2khq6-4+i)zuc(c9-p*k6ho#&h9fw4"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -29,6 +30,8 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     "rest_framework.authtoken",
+    "django_celery_beat",
+    "django_celery_results",
     "rest_framework_simplejwt",
     # Local apps
     "todo",
@@ -45,6 +48,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 
 ROOT_URLCONF = "config.urls"
 
@@ -120,6 +124,32 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+# Email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "xackercoder@gmail.com"
+EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws" 
+EMAIL_SUBJECT = "Email verification"
+
+# add redirect url after login google
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+CELERY_RESULT_BACKEND = "redis://localhost:6379/1"  # or your result backend
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tashkent"
+
+
+# CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+# broker_connection_retry_on_startup
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
