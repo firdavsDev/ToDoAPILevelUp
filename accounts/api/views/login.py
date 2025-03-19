@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from accounts.serializers import UserLoginSerializer, UserSerializer
 
 
+# TODO Make AllowAny, And return refresh/access token
 @transaction.atomic
 @api_view(["POST"])
 def login_user(request):
@@ -27,3 +28,6 @@ def login_user(request):
         "errors": serializer.errors,
     }
     return Response(response_dict, status=status.HTTP_400_BAD_REQUEST)
+
+
+# TODO write logout api function

@@ -14,12 +14,13 @@ class TaskSerializer(serializers.Serializer):
 
 
 class TaskSerializerModel(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     # source is used to map the field name
     description = serializers.CharField(source="discription")
     # v1 create a new field
     # user_full_name = serializers.SerializerMethodField()
     info = serializers.SerializerMethodField()
+    title = serializers.CharField(allow_blank=False)
 
     def get_info(self, obj):
         return obj.title + " - " + obj.discription
@@ -31,26 +32,26 @@ class TaskSerializerModel(serializers.ModelSerializer):
         # v2 add a new field
         data = super().to_representation(instance)
         data["completed_in_word"] = "Yes" if data["completed"] else "No"
-        data["info_v2"] = data["title"]
+        data["info_v2"] = data.get("title") + " - " + data.get("description")
         return data
 
     # no need to define fields
     class Meta:
         model = Task
-        fields = ["id", "title", "description", "info", "completed"]
+        fields = ["id", "title", "user", "description", "info", "completed"]
         # fields = '__all__'
         # exclude = ['id']
         read_only_fields = ["id"]
 
-        # # error message for fields
-        # extra_kwargs = {
-        #     # "title": {"error_messages": {"required": "Title is required"}},
-        #     "discription": {
-        #         "error_messages": {"required": "Discription is majburiy"},
-        #         "required": False,
-        #     },
-        #     "completed": {"error_messages": {"required": "Completed is required"}},
-        # }
+        # error message for fields
+        extra_kwargs = {
+            "title": {"error_messages": {"required": "Title is required"}},
+            "discription": {
+                "error_messages": {"required": "Discription is majburiy"},
+                "required": False,
+            },
+            "completed": {"error_messages": {"required": "Completed is required"}},
+        }
 
     # overide save method
     # def save(self, **kwargs):
@@ -65,7 +66,7 @@ class TaskSerializerModel(serializers.ModelSerializer):
 
     def validate(self, data):
         self._errors = {}
-        if "task" not in data["title"]:
+        if data.get("title") and "task" not in data.get("title"):
             self._errors["title"] = ["Title must contain task"]
         if self._errors:
             raise serializers.ValidationError(self._errors)
@@ -85,3 +86,11 @@ class TaskSerializerModel(serializers.ModelSerializer):
         instance.completed = validated_data.get("completed", instance.completed)
         instance.save()
         return instance
+
+
+class TasksListSerializerModel(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        # fields = ["id", "title", "completed"]
+        exclude = ["discription", "user"]
+        read_only_fields = ["id"]

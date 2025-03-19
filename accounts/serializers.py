@@ -53,7 +53,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["password"] != data["password_2"]:
             raise serializers.ValidationError("Passwords do not match")
-
         return data
 
     def create(self, validated_data):
@@ -66,7 +65,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            is_active=False,
+            # is_active=False,
         )
         user.set_password(password)
         user.save()

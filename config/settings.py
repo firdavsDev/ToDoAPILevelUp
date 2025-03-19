@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
-from decouple import config 
+
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "django_celery_results",
     "rest_framework_simplejwt",
+    "drf_yasg",
     # Local apps
     "todo",
     "accounts",
@@ -124,20 +126,20 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Email settings
+# Email setting
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "xackercoder@gmail.com"
-EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws" 
+EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws"
 EMAIL_SUBJECT = "Email verification"
 
 # add redirect url after login google
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-
+# TODO move to .env
 CELERY_BROKER_URL = "redis://localhost:6379/0"  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 CELERY_RESULT_BACKEND = "redis://localhost:6379/1"  # or your result backend
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -175,4 +177,11 @@ SIMPLE_JWT = {
     # 'AUTH_HEADER_TYPES': ('Bearer',),
     # 'USER_ID_FIELD': 'id',
     # 'USER_ID_CLAIM': 'user_id',
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+    },
+    "USE_SESSION_AUTH": True,
 }

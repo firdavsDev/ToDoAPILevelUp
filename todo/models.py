@@ -5,12 +5,11 @@ User = get_user_model()
 
 
 class Task(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True
-    )  # If user is deleted, delete all tasks
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=200)
     discription = models.TextField()
     completed = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
     # about = Title + Discription
 
     def __str__(self):

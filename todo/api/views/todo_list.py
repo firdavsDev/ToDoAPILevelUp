@@ -1,62 +1,45 @@
+from django.core.paginator import Paginator
 from rest_framework import status
-from rest_framework.authentication import (
-    BasicAuthentication,
-    SessionAuthentication,
-    TokenAuthentication,
-)
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-    permission_classes,
-)
-from rest_framework.permissions import (
-    AllowAny,
-    IsAdminUser,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from todo.models import Task
 
-from ..serializers.todo import TaskSerializerModel
+from ..serializers.todo import TasksListSerializerModel
 
 
 @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# @authentication_classes([JWTAuthentication])
 def list_todo_api_view(request):
     try:
+        show_all = request.query_params.get("show_all", False)
+        completed = request.query_params.get("completed", 0)
+        if show_all:
+            tasks = Task.objects.filter(is_public=True)
+        else:
+            user = request.user
+            tasks = Task.objects.filter(user=user)
 
-        tasks = Task.objects.all()  # .first()
+        if completed == "1":
+            tasks = tasks.filter(completed=True)
 
-        # V1
-        # tasks_json = []
-        # for task in tasks:
-        #     tasks_json.append(
-        #         {
-        #             "id": task.id,
-        #             "title": task.title,
-        #             "description": task.discription,
-        #             "completed": task.completed,
-        #         }
-        #     )
-        # tasks_json = json.dumps(tasks_json)
+        # -----------------------------------------------------------
+        page_number = request.query_params.get("page_number", 1)
+        page_size = request.query_params.get("page_size", 2)
 
-        # v2
-        # todo_serializer_obj = TaskSerializer(
-        #     tasks
-        # )  # many=True when tasks is a queryset of multiple objects
-        # tasks_json = todo_serializer_obj.data  # converts to json data
-
-        # v3
-        todo_serializer_obj = TaskSerializerModel(
-            tasks, many=True
-        )  # many=True when tasks is a queryset of multiple objects
-        tasks_json = todo_serializer_obj.data  # converts to json data
-
-        return Response(tasks_json, status=status.HTTP_200_OK)
+        paginator = Paginator(tasks, page_size)
+        page = paginator.page(page_number)
+        page_count = paginator.num_pages
+        total_count = paginator.count
+        serializer = TasksListSerializerModel(page, many=True)
+        # -----------------------------------------------------------
+        response = {
+            "total_count": total_count,
+            "page_count": page_count,
+            "page_number": page_number,
+            "page_size": page_size,
+            "data": serializer.data,
+        }
+        return Response(response, status=status.HTTP_200_OK)
     except Exception as e:
         txt = {"error": str(e)}
         return Response(txt, status=400)
