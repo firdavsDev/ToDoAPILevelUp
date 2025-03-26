@@ -49,5 +49,3 @@ def partial_update_todo_detail(request, task_id):
         return Response(txt, status=404)
     except Exception as e:
         raise e
-        txt = {"error": str(e)}
-        return Response(txt, status=400)
