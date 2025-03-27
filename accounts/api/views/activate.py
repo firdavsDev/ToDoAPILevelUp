@@ -8,6 +8,7 @@ from accounts.email_verifycation import verify_email_code
 from accounts.models import CustomUser
 
 
+@api_view(["POST"])
 def verify_email(request, email_code):
     try:
         user_id = verify_email_code(email_code)

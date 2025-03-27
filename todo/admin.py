@@ -7,9 +7,10 @@ def make_public(modeladmin, request, queryset):
     queryset.update(is_public=True)
 
 
-# TODO make more buty
 class TaskAdmin(admin.ModelAdmin):
     list_display = ["title", "is_public"]
+    list_filter = ["completed"]
+    search_fields = ["user"]
     actions = [make_public]
 
 

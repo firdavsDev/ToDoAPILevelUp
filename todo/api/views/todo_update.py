@@ -27,12 +27,12 @@ def update_todo_detail(request, task_id):
 @api_view(["PATCH"])
 def partial_update_todo_detail(request, task_id):
     try:
-        # TODO check task user is reques user
+        user = request.user
         task = Task.objects.get(id=task_id)
         todo_serializer_obj = TaskSerializerModel(
             instance=task, data=request.data, partial=True
         )
-        if todo_serializer_obj.is_valid():
+        if task.user == user and todo_serializer_obj.is_valid():
             todo_serializer_obj.save()
             data = {
                 "message": "Task Updated Successfully",
@@ -49,5 +49,3 @@ def partial_update_todo_detail(request, task_id):
         return Response(txt, status=404)
     except Exception as e:
         raise e
-        txt = {"error": str(e)}
-        return Response(txt, status=400)

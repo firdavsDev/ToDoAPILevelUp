@@ -131,17 +131,16 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "xackercoder@gmail.com"
-EMAIL_HOST_PASSWORD = "gpod rvey zptd tdws"
+EMAIL_HOST_USER = "azizbeknuraliyev2005@gmail.com"
+EMAIL_HOST_PASSWORD = "cykj mxum fmvv jejo"
 EMAIL_SUBJECT = "Email verification"
 
 # add redirect url after login google
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# TODO move to .env
-CELERY_BROKER_URL = "redis://localhost:6379/0"  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-CELERY_RESULT_BACKEND = "redis://localhost:6379/1"  # or your result backend
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND") # or your result backend
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

@@ -15,7 +15,6 @@ def get_todo_detail(request, task_id):
         if task.user != user:
             txt = {"error": "Task not found"}
             return Response(txt, status=status.HTTP_404_NOT_FOUND)
-        # TODO if task.user != user:
         todo_serializer_obj = TaskSerializerModel(instance=task)
         return Response(todo_serializer_obj.data, status=status.HTTP_200_OK)
     except Task.DoesNotExist:
