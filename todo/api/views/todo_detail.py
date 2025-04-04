@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
 
 from todo.models import Task
 
@@ -23,3 +24,16 @@ def get_todo_detail(request, task_id):
     except Exception as e:
         txt = {"error": str(e)}
         return Response(txt, status=400)
+
+
+class GetTodoDetailAPIView(RetrieveAPIView):
+    serializer_class = TaskSerializerModel
+    lookup_field = 'task_id'
+
+    def get_queryset(self):
+        user = self.request.user
+        task = Task.objects.filter(user=user)
+        return task
+    
+
+get_todo_detail_api_view = GetTodoDetailAPIView.as_view()
