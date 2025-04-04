@@ -1,6 +1,7 @@
 from django.db import transaction
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from django.contrib.auth import login as logout
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -49,4 +50,13 @@ class LoginAPIView(APIView):
 # Object yaratib keyin yaratilgan objectni url ga qo'shish
 login_api_view = LoginAPIView.as_view()
 
-# TODO write logout api function
+
+class LogoutAPIView(APIView):
+    def post(self, request):
+        logout(request)
+        response_dict = {
+            "message": "User Logout successfuly",
+        }
+        return Response(response_dict, status=status.HTTP_200_OK)
+    
+logout_api_view = LogoutAPIView.as_view()

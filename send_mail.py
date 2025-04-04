@@ -5,8 +5,8 @@ from email.mime.text import MIMEText
 
 smtp_server = "smtp.gmail.com"
 port = 587  # For starttls
-sender_email = "xackercoder@gmail.com"
-password = "gpod rvey zptd tdws"
+sender_email = "azizbeknuraliyev2005@gmail.com"
+password = "cykj mxum fmvv jejo"
 receiver_email = "azizbeknuraliyev671@gmail.com"
 
 message = MIMEMultipart("alternative")

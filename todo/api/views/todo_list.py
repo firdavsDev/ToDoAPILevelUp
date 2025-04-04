@@ -7,10 +7,12 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
+    GenericAPIView,
 )
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.mixins import ListModelMixin
 
 from todo.models import Task
 
@@ -81,3 +83,22 @@ class ListTodoGenericAPIView(ListAPIView):
 
 
 list_todo_generic_api_view = ListTodoGenericAPIView.as_view()
+
+
+
+################################################################################################################
+
+class ListTodoMixinAPIView(GenericAPIView, ListModelMixin):
+    serializer_class= TasksListSerializerModel
+
+    def get_queryset(self):
+        show_all = self.request.query_params.get("show_all", False)
+        completed = self.request.query_params.get("completed", 0)
+        user = self.request.user
+        tasks = Task.objects.filter(user=user)
+        return tasks
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+list_todo_mixin_api_view = ListTodoMixinAPIView.as_view()
