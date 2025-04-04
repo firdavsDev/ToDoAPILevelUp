@@ -8,9 +8,11 @@ def make_public(modeladmin, request, queryset):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ["title", "is_public"]
+    list_display = ["title", "user", "is_public"]
     list_filter = ["completed"]
-    search_fields = ["user"]
+    search_fields = ["user__username", "title"]
+    list_per_page = 20
+    actions_on_top = True
     actions = [make_public]
 
 

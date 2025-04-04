@@ -11,7 +11,7 @@ urlpatterns = [
     path("", home, name="home"),
     # API
     path("api/accounts/", include("accounts.urls")),
-    path("api/todo/", include("todo.api.urls")),
+    path("api/todo/", include("todo.urls")),
     # JWT
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # Swagger

@@ -8,3 +8,4 @@ django_celery_results
 python-decouple
 djangorestframework_simplejwt
 drf-yasg
+django-filter==25.1

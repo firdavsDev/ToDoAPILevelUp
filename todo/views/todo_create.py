@@ -1,9 +1,11 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from common.mixins import APIViewResponseMixin
 
 from ..serializers.todo import TaskSerializerModel
 
@@ -65,3 +67,40 @@ class CreateTodoAPIView(APIView):
 
 
 create_todo_api_view = CreateTodoAPIView.as_view()
+
+
+# Generic CreateAPIView class
+class CreateTodoGenericAPIView(CreateAPIView, APIViewResponseMixin):
+    serializer_class = TaskSerializerModel
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(
+                data=request.data, context={"user": request.user}
+            )
+            # serializer.is_valid(raise_exception=True)
+            if not serializer.is_valid():
+                return self.failure_response(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    message=f"Xatolik: {serializer.errors}",
+                )
+
+            self.perform_create(serializer)
+
+            return self.success_response(
+                data=serializer.data,
+                status_code=status.HTTP_201_CREATED,
+                message="Todo created successfully",
+            )
+        except Exception as e:
+            txt = {"error": str(e)}
+            return self.error_response(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                message=txt,
+            )
+
+
+generic_create_todo_api_view = CreateTodoGenericAPIView.as_view()

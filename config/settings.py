@@ -16,7 +16,9 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "*"
+]  # config("ALLOWED_HOSTS").split(",") if DEBUG else config("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "rest_framework_simplejwt",
     "drf_yasg",
+    "django_filters",
     # Local apps
     "todo",
     "accounts",
@@ -139,8 +142,8 @@ EMAIL_SUBJECT = "Email verification"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-CELERY_BROKER_URL = config("CELERY_BROKER_URL")  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND") # or your result backend
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")  # Redis
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -156,12 +159,23 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    # DjangoFilterBackend
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+    "SEARCH_PARAM": "q",
+    "ORDERING_PARAM": "ordering",
+    # "ORDERING": ["-created_at"],
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
